@@ -38,7 +38,7 @@ jobs:
         run: |
           cd backend
           pip install uv
-          # psycopg2-binary for Alembic sync migrations (not needed at runtime)
+          # psycopg2-binary needed by Alembic for sync migrations
           uv pip install --system --no-cache ".[dev]" psycopg2-binary
 
       - name: Run migrations
@@ -68,16 +68,16 @@ jobs:
       - name: SSH → pull → rebuild → restart
         uses: appleboy/ssh-action@v1
         env:
-          DB_PASSWORD:          ${{ secrets.DB_PASSWORD }}
-          JWT_SECRET:           ${{ secrets.JWT_SECRET }}
-          ADMIN_USERNAME:       ${{ secrets.ADMIN_USERNAME }}
-          ADMIN_PASSWORD:       ${{ secrets.ADMIN_PASSWORD }}
-          NEXT_PUBLIC_API_URL:  ${{ secrets.NEXT_PUBLIC_API_URL }}
+          DB_PASSWORD:         ${{ secrets.DB_PASSWORD }}
+          JWT_SECRET:          ${{ secrets.JWT_SECRET }}
+          ADMIN_USERNAME:      ${{ secrets.ADMIN_USERNAME }}
+          ADMIN_PASSWORD:      ${{ secrets.ADMIN_PASSWORD }}
+          NEXT_PUBLIC_API_URL: ${{ secrets.NEXT_PUBLIC_API_URL }}
         with:
           host:     ${{ secrets.VPS_HOST }}
           username: ${{ secrets.VPS_USER }}
           key:      ${{ secrets.VPS_SSH_KEY }}
-          port:     ${{ secrets.VPS_PORT || 22 }}
+          port:     ${{ secrets.VPS_PORT }}
           envs:     DB_PASSWORD,JWT_SECRET,ADMIN_USERNAME,ADMIN_PASSWORD,NEXT_PUBLIC_API_URL
           script: |
             set -e
@@ -86,7 +86,7 @@ jobs:
 
             git pull origin main
 
-            # Write .env from secrets — printf avoids heredoc escaping issues
+            # Write .env — printf avoids heredoc escaping issues with special chars
             printf '%s\n' \
               "DB_PASSWORD=${DB_PASSWORD}" \
               "JWT_SECRET=${JWT_SECRET}" \
@@ -97,7 +97,11 @@ jobs:
               "SCRAPER_REQUEST_DELAY=1.0" \
               > .env
 
-            docker compose up --build -d
+            docker-compose up --build -d
 
-            # Drop image layers that are no longer referenced
+            # Drop layers that are no longer referenced
             docker image prune -f
+
+            # Install/update the nginx site config and reload
+            cp nginx/million-miles.conf /etc/nginx/sites-enabled/million-miles
+            nginx -t && systemctl reload nginx

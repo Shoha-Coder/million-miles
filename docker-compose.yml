@@ -17,6 +17,8 @@ services:
   backend:
     build: ./backend
     restart: unless-stopped
+    ports:
+      - "8020:8000"
     depends_on:
       db:
         condition: service_healthy
@@ -36,21 +38,12 @@ services:
       args:
         NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL}
     restart: unless-stopped
+    ports:
+      - "3010:3000"
     environment:
       NODE_ENV: production
     depends_on:
       - backend
-
-  nginx:
-    image: nginx:alpine
-    restart: unless-stopped
-    ports:
-      - "80:80"
-    volumes:
-      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
-    depends_on:
-      - backend
-      - frontend
 
 volumes:
   postgres_data:
