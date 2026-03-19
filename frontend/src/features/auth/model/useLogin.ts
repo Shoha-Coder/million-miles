@@ -10,17 +10,15 @@ import { useAuthStore } from "./store";
 export function useLogin() {
   const [error, setError]     = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
-  const setToken              = useAuthStore((s) => s.setToken);
+  const setTokens             = useAuthStore((s) => s.setTokens);
   const router                = useRouter();
 
   async function submit(username: string, password: string) {
     setError(null);
     setLoading(true);
     try {
-      const { access_token } = await login({ username, password });
-      // Store in Zustand (persisted) and in localStorage for the axios interceptor
-      setToken(access_token);
-      localStorage.setItem("token", access_token);
+      const { access_token, refresh_token } = await login({ username, password });
+      setTokens(access_token, refresh_token);
       router.push(ROUTES.cars);
     } catch {
       setError("Wrong username or password");

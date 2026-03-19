@@ -26,9 +26,11 @@ services:
       DATABASE_URL: postgresql+asyncpg://postgres:${DB_PASSWORD}@db:5432/million_miles
       JWT_SECRET: ${JWT_SECRET}
       JWT_ALGORITHM: HS256
-      JWT_EXPIRE_MINUTES: 1440
       ADMIN_USERNAME: ${ADMIN_USERNAME:-admin}
-      ADMIN_PASSWORD: ${ADMIN_PASSWORD:-admin123}
+      # $$ in compose files = literal $ — bcrypt hash must not be shell-expanded
+      ADMIN_PASSWORD_HASH: "$$2b$$12$$ut6d54Hp/Nn35FFpH02l4e8ioGDntsJEyfJRK3wNllCLq2AYiWlyK"
+      ADMIN_USERNAME_2: ${ADMIN_USERNAME_2:-}
+      ADMIN_PASSWORD_HASH_2: ${ADMIN_PASSWORD_HASH_2:-}
       SCRAPER_PAGES_PER_RUN: ${SCRAPER_PAGES_PER_RUN:-100}
       SCRAPER_REQUEST_DELAY: ${SCRAPER_REQUEST_DELAY:-1.0}
 

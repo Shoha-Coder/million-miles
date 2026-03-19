@@ -1,0 +1,22 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(ssh -p 30030 -i \"C:\\\\Users\\\\Shoha_Coder\\\\.ssh\\\\ndc_server\" -o StrictHostKeyChecking=no root@176.96.243.232 \"cd /var/www/shoha && docker-compose up --build -d 2>&1\")",
+      "Bash(ssh -p 30030 -i \"C:\\\\Users\\\\Shoha_Coder\\\\.ssh\\\\ndc_server\" -o StrictHostKeyChecking=no root@176.96.243.232 \"which certbot && certbot --version\")",
+      "Bash(ssh -p 30030 -i \"C:\\\\Users\\\\Shoha_Coder\\\\.ssh\\\\ndc_server\" -o StrictHostKeyChecking=no root@176.96.243.232 \"certbot --nginx -d million-miles.shoha-coder.uz -d back.million-miles.shoha-coder.uz --non-interactive --agree-tos --email shoha@shoha-coder.uz --redirect 2>&1\")",
+      "Bash(python3 -c \"from passlib.context import CryptContext; ctx = CryptContext\\(schemes=[''bcrypt'']\\); print\\(ctx.hash\\(''Shohruh09''\\)\\)\")",
+      "Bash(python -c \"from passlib.context import CryptContext; ctx = CryptContext\\(schemes=[''bcrypt'']\\); print\\(ctx.hash\\(''Shohruh09''\\)\\)\")",
+      "Bash(python -c \"from passlib.context import CryptContext; print\\(CryptContext\\(schemes=[''bcrypt'']\\).hash\\(''Shohruh09''\\)\\)\")",
+      "Bash(python -c \"import bcrypt; h = bcrypt.hashpw\\(b''Shohruh09'', bcrypt.gensalt\\(12\\)\\); print\\(h.decode\\(\\)\\)\")",
+      "Bash(ssh -p:*)",
+      "Bash(tar --exclude='./frontend/node_modules' --exclude='./frontend/.next' --exclude='./__pycache__' --exclude='./backend/__pycache__' -czf /tmp/mm-patch.tar.gz backend/src/config.py backend/src/application/use_cases/login.py backend/src/presentation/dependencies.py backend/src/presentation/schemas/auth.py backend/src/presentation/api/auth.py frontend/src/features/auth/model/store.ts frontend/src/features/auth/model/useLogin.ts frontend/src/shared/api/auth.ts frontend/src/shared/api/client.ts)",
+      "Bash(scp -P 30030 -i \"C:\\\\Users\\\\Shoha_Coder\\\\.ssh\\\\ndc_server\" -o StrictHostKeyChecking=no \"d:/E/proj/tz/million-miles/.env.server\" root@176.96.243.232:/var/www/shoha/.env)",
+      "Bash(scp -P 30030 -i \"C:\\\\Users\\\\Shoha_Coder\\\\.ssh\\\\ndc_server\" -o StrictHostKeyChecking=no \"d:/E/proj/tz/million-miles/docker-compose.yml\" root@176.96.243.232:/var/www/shoha/docker-compose.yml)",
+      "Bash(tar -czf /tmp/mm-auth2.tar.gz backend/src/application/use_cases/login.py backend/pyproject.toml)",
+      "Bash(scp -P 30030 -i \"C:\\\\Users\\\\Shoha_Coder\\\\.ssh\\\\ndc_server\" -o StrictHostKeyChecking=no /tmp/mm-auth2.tar.gz root@176.96.243.232:/var/www/shoha/)",
+      "Bash(tar -czf /tmp/mm-authfix.tar.gz frontend/src/features/auth/model/store.ts frontend/src/app/cars/layout.tsx)",
+      "Bash(scp -P 30030 -i \"C:\\\\Users\\\\Shoha_Coder\\\\.ssh\\\\ndc_server\" -o StrictHostKeyChecking=no /tmp/mm-authfix.tar.gz root@176.96.243.232:/var/www/shoha/)",
+      "Bash(xargs grep:*)"
+    ]
+  }
+}

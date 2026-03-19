@@ -168,26 +168,21 @@ class CarSensorParser:
             if el.get_text(strip=True)
         ]
 
-        # Translate all Japanese strings concurrently
-        (
-            make, model, grade, color, transmission,
-            body_type, fuel_type, drivetrain, prefecture, dealer_name,
-        ) = await asyncio.gather(
-            self._translator.translate(raw_make or "Unknown"),
-            self._translator.translate(raw_model or "Unknown"),
-            self._translator.translate(raw_grade or ""),
-            self._translator.translate(raw_color or ""),
-            self._translator.translate(raw_trans or ""),
-            self._translator.translate(raw_body or ""),
-            self._translator.translate(raw_fuel or ""),
-            self._translator.translate(raw_drive or ""),
-            self._translator.translate(raw_prefecture or ""),
-            self._translator.translate(raw_dealer or ""),
-        )
+        # Translations share one AsyncSession — sequential calls avoid concurrent-op errors
+        make         = await self._translator.translate(raw_make or "Unknown")
+        model        = await self._translator.translate(raw_model or "Unknown")
+        grade        = await self._translator.translate(raw_grade or "")
+        color        = await self._translator.translate(raw_color or "")
+        transmission = await self._translator.translate(raw_trans or "")
+        body_type    = await self._translator.translate(raw_body or "")
+        fuel_type    = await self._translator.translate(raw_fuel or "")
+        drivetrain   = await self._translator.translate(raw_drive or "")
+        prefecture   = await self._translator.translate(raw_prefecture or "")
+        dealer_name  = await self._translator.translate(raw_dealer or "")
 
-        translated_features = await asyncio.gather(
-            *[self._translator.translate(f) for f in raw_features]
-        )
+        translated_features = [
+            await self._translator.translate(f) for f in raw_features
+        ]
 
         return Car(
             id=car_id,

@@ -9,16 +9,18 @@ import { Button }       from "@/shared/ui/Button";
 import { ROUTES }       from "@/shared/config/routes";
 
 export default function CarsLayout({ children }: { children: React.ReactNode }) {
-  const token  = useAuthStore((s) => s.token);
-  const logout = useAuthStore((s) => s.logout);
-  const router = useRouter();
+  const token    = useAuthStore((s) => s.token);
+  const hydrated = useAuthStore((s) => s.hydrated);
+  const logout   = useAuthStore((s) => s.logout);
+  const router   = useRouter();
 
-  // Client-side auth guard — redirect to login if no token
+  // Wait until localStorage is read before deciding to redirect — prevents
+  // flash-redirect on page refresh when the store starts with token=null
   useEffect(() => {
-    if (!token) router.replace(ROUTES.login);
-  }, [token, router]);
+    if (hydrated && !token) router.replace(ROUTES.login);
+  }, [hydrated, token, router]);
 
-  if (!token) return null;
+  if (!hydrated) return null;
 
   return (
     <div className="min-h-screen flex flex-col">
